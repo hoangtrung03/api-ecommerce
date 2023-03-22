@@ -35,6 +35,6 @@ routes.forEach((item) => item.routes.forEach((route) => app.use(item.prefix + ro
 app.use(function (err, req, res, next) {
     (0, response_1.responseError)(res, err);
 });
-app.listen(process.env.PORT, function () {
+app.listen(process.env.PORT || 3000, function () {
     console.log(chalk_1.default.greenBright(`API listening on port ${process.env.PORT}!`));
 });
