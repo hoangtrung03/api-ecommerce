@@ -13,6 +13,7 @@ import { isProduction } from './utils/helper'
 require('dotenv').config()
 
 const app: express.Application = express()
+//connect db
 connectMongoDB()
 const routes = [{ ...commonRoutes }, { ...userRoutes }, { ...adminRoutes }]
 app.use(helmet())
