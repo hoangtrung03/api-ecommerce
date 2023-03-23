@@ -17,11 +17,14 @@ const lodash_1 = require("lodash");
 const product_1 = require("../constants/product");
 const handleImageProduct = (product) => {
     if (product.image !== undefined && product.image !== '') {
+        //link img
         product.image = helper_1.HOST + `/${config_1.ROUTE_IMAGE}/` + product.image;
     }
     if (product.images !== undefined && product.images.length !== 0) {
         product.images = product.images.map((image) => {
+            //link img
             return image !== '' ? helper_1.HOST + `/${config_1.ROUTE_IMAGE}/` + image : '';
+            // return image !== '' ? image : ''
         });
     }
     return product;

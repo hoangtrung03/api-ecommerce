@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { responseSuccess, ErrorHandler } from '../utils/response'
+import { ImageModel } from '../database/models/image.model'
 import { ProductModel } from '../database/models/product.model'
 import { STATUS } from '../constants/status'
 import mongoose from 'mongoose'
@@ -311,9 +312,12 @@ const searchProduct = async (req: Request, res: Response) => {
 
 const uploadProductImage = async (req: Request, res: Response) => {
   const path = await uploadFile(req, FOLDERS.PRODUCT)
+  const image = path
+  const imageAdd = await new ImageModel(image).save()
   const response = {
     message: 'Upload ảnh thành công',
     data: path,
+    imageDB: imageAdd
   }
   return responseSuccess(res, response)
 }

@@ -17,15 +17,18 @@ const upload = (image, folder) => {
     if (!fs.existsSync(dir)) {
       shelljs.mkdir('-p', dir)
     }
+    
+    const origin_name = image.name
     const tmpPath = image.path
     const newName = uuidv4() + '.' + getExtension(image.name)
+    const name_file = newName
     const newPath = dir + '/' + newName
     mv(tmpPath, newPath, function (err) {
       if (err)
         return reject(
           new ErrorHandler(STATUS.INTERNAL_SERVER_ERROR, 'Lỗi đổi tên file')
         )
-      resolve(newName)
+      resolve({ origin_name: origin_name, name_file: name_file, path: newPath })
     })
   })
 }
@@ -54,6 +57,8 @@ export const uploadFile = (req: Request, folder = '') => {
         }
         upload(image, folder)
           .then((res: string) => {
+            //data upload tra ve
+            // console.log('res', res)
             resolve(res)
           })
           .catch((err) => {

@@ -17,6 +17,7 @@ const path_1 = __importDefault(require("path"));
 const helper_1 = require("./utils/helper");
 require('dotenv').config();
 const app = (0, express_1.default)();
+//connect db
 (0, database_1.connectMongoDB)();
 const routes = [{ ...index_route_2.default }, { ...index_route_3.default }, { ...index_route_1.default }];
 app.use((0, helmet_1.default)());
