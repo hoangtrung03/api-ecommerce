@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./build/index.js production",
-    "node-build": "tsc --project ./",
-    "build": "npm install && npm run node-build",
+    "start": "nodemon --files index.ts",
+    "build": "tsc --project ./",
     "prod": "tsc --project ./ && node ./build/index.js production"
   },
   "keywords": [],
