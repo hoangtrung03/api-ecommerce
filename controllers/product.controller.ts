@@ -22,7 +22,7 @@ export const handleImageProduct = (product) => {
     product.images = product.images.map((image) => {
       //link img
       // return image !== '' ? HOST + `/${ROUTE_IMAGE}/` + image : ''
-      // return image !== '' ? image : ''
+      return image !== '' ? image : ''
     })
   }
   return product
