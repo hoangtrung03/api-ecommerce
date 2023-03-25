@@ -13,11 +13,11 @@ import { ORDER, SORT_BY } from '../constants/product'
 
 export const handleImageProduct = (product) => {
   if (product.image !== undefined && product.image !== '') {
-    product.image = HOST + `/${ROUTE_IMAGE}/` + product.image
+    product.image = product.image
   }
   if (product.images !== undefined && product.images.length !== 0) {
     product.images = product.images.map((image) => {
-      return image !== '' ? HOST + `/${ROUTE_IMAGE}/` + image : ''
+      return image !== '' ? '' + image : ''
     })
   }
   return product
