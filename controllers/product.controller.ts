@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { responseSuccess, ErrorHandler } from '../utils/response'
-import { ImageModel } from '../database/models/image.model'
 import { ProductModel } from '../database/models/product.model'
 import { STATUS } from '../constants/status'
 import mongoose from 'mongoose'
@@ -14,14 +13,11 @@ import { ORDER, SORT_BY } from '../constants/product'
 
 export const handleImageProduct = (product) => {
   if (product.image !== undefined && product.image !== '') {
-    //link img
-    product.image = product.image
+    product.image = HOST + `/${ROUTE_IMAGE}/` + product.image
   }
   if (product.images !== undefined && product.images.length !== 0) {
     product.images = product.images.map((image) => {
-      //link img
-      // return image !== '' ? HOST + `/${ROUTE_IMAGE}/` + image : ''
-      return image !== '' ? image : ''
+      return image !== '' ? HOST + `/${ROUTE_IMAGE}/` + image : ''
     })
   }
   return product
@@ -312,12 +308,9 @@ const searchProduct = async (req: Request, res: Response) => {
 
 const uploadProductImage = async (req: Request, res: Response) => {
   const path = await uploadFile(req, FOLDERS.PRODUCT)
-  // const image: any = path
-  // const imageAdd = await new ImageModel(image).save()
   const response = {
     message: 'Upload ảnh thành công',
     data: path,
-    // imageDB: imageAdd,
   }
   return responseSuccess(res, response)
 }
