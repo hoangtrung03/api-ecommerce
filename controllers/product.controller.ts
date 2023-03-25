@@ -16,7 +16,7 @@ export const handleImageProduct = (product) => {
   if (product.image !== undefined && product.image !== '') {
     //link img
     // product.image = HOST + `/${ROUTE_IMAGE}/` + product.image
-    product.image
+    return product.image
   }
   if (product.images !== undefined && product.images.length !== 0) {
     product.images = product.images.map((image) => {
@@ -313,12 +313,12 @@ const searchProduct = async (req: Request, res: Response) => {
 
 const uploadProductImage = async (req: Request, res: Response) => {
   const path = await uploadFile(req, FOLDERS.PRODUCT)
-  const image = path
-  const imageAdd = await new ImageModel(image).save()
+  // const image: any = path
+  // const imageAdd = await new ImageModel(image).save()
   const response = {
     message: 'Upload ảnh thành công',
     data: path,
-    imageDB: imageAdd
+    // imageDB: imageAdd,
   }
   return responseSuccess(res, response)
 }

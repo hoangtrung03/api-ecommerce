@@ -33,7 +33,8 @@ const handlerImage: any = Object.values(FOLDERS).reduce(
   [express.static(path.join(dirNameWithEnv, `/${FOLDER_UPLOAD}`))]
 )
 
-app.use(`/${ROUTE_IMAGE}`, ...handlerImage)
+// app.use(`/${ROUTE_IMAGE}`, ...handlerImage)
+app.use('', ...handlerImage)
 
 routes.forEach((item) =>
   item.routes.forEach((route) => app.use(item.prefix + route.path, route.route))
