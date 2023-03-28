@@ -286,24 +286,72 @@ const deleteManyProducts = async (req: Request, res: Response) => {
   }
 }
 
+// const searchProduct = async (req: Request, res: Response) => {
+//   let { searchText }: { [key: string]: string | any } = req.query
+//   searchText = decodeURI(searchText)
+//   let condition = { $text: { $search: `\"${searchText}\"` } }
+//   if (!isAdmin(req)) {
+//     condition = Object.assign(condition, { visible: true })
+//   }
+//   let products: any = await ProductModel.find(condition)
+//     .populate('category')
+//     .sort({ createdAt: -1 })
+//     .select({ __v: 0, description: 0 })
+//     .lean()
+//   products = products.map((product) => handleImageProduct(product))
+//   const response = {
+//     message: 'Tìm các sản phẩm thành công',
+//     data: products,
+//   }
+//   return responseSuccess(res, response)
+// }
+
+const removeUnicode = (str: string) => {
+  if (!str) return ''
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
+
 const searchProduct = async (req: Request, res: Response) => {
-  let { searchText }: { [key: string]: string | any } = req.query
-  searchText = decodeURI(searchText)
-  let condition = { $text: { $search: `\"${searchText}\"` } }
-  if (!isAdmin(req)) {
-    condition = Object.assign(condition, { visible: true })
-  }
-  let products: any = await ProductModel.find(condition)
+  // const { searchText }: { searchText: string } = req.query as {
+  //   searchText: string
+  // }
+  // or
+  const { searchText } = Object.assign({}, req.query) as { searchText: string }
+  const searchTextWithoutSign = removeUnicode(searchText)
+  const condition = !isAdmin(req)
+    ? {
+        $or: [
+          { name: { $regex: searchText, $options: 'i' } },
+          { name: { $regex: searchTextWithoutSign, $options: 'i' } },
+        ],
+        visible: true,
+      }
+    : {
+        $or: [
+          { name: { $regex: searchText, $options: 'i' } },
+          { name: { $regex: searchTextWithoutSign, $options: 'i' } },
+        ],
+      }
+
+  let products: any[] = await ProductModel.find(condition, {
+    description: 0,
+    __v: 0,
+  })
     .populate('category')
     .sort({ createdAt: -1 })
-    .select({ __v: 0, description: 0 })
     .lean()
-  products = products.map((product) => handleImageProduct(product))
-  const response = {
+
+  products = await Promise.all(
+    products.map(async (product) => await handleImageProduct(product))
+  )
+
+  return responseSuccess(res, {
     message: 'Tìm các sản phẩm thành công',
     data: products,
-  }
-  return responseSuccess(res, response)
+  })
 }
 
 const uploadProductImage = async (req: Request, res: Response) => {
