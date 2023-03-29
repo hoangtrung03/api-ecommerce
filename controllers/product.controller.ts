@@ -286,53 +286,26 @@ const deleteManyProducts = async (req: Request, res: Response) => {
   }
 }
 
-// const searchProduct = async (req: Request, res: Response) => {
-//   let { searchText }: { [key: string]: string | any } = req.query
-//   searchText = decodeURI(searchText)
-//   let condition = { $text: { $search: `\"${searchText}\"` } }
-//   if (!isAdmin(req)) {
-//     condition = Object.assign(condition, { visible: true })
-//   }
-//   let products: any = await ProductModel.find(condition)
-//     .populate('category')
-//     .sort({ createdAt: -1 })
-//     .select({ __v: 0, description: 0 })
-//     .lean()
-//   products = products.map((product) => handleImageProduct(product))
-//   const response = {
-//     message: 'Tìm các sản phẩm thành công',
-//     data: products,
-//   }
-//   return responseSuccess(res, response)
-// }
-
 const searchProduct = async (req: Request, res: Response) => {
-  try {
-    const { searchText } = req.query
-    const products = await ProductModel.find(
-      { $text: { $search: String(searchText) } },
-      (err: any, docs: Document<Product>[]) => {
-        if (err) console.error(err)
-        const response = {
-          message: 'Tìm kiếm sản phẩm thành công',
-          data: docs,
-        }
-        return responseSuccess(res, response)
-      }
-    )
-      .populate('category')
-      .select('-description -__v')
-      .sort({ createdAt: -1 })
-      .lean()
-    const response = {
-      message: 'Tìm kiếm sản phẩm thành công',
-      data: products,
-    }
-    return responseSuccess(res, response)
-  } catch (error) {
-    console.error(error)
+  let { searchText }: { [key: string]: string | any } = req.query
+  searchText = decodeURI(searchText)
+  let condition = { $text: { $search: `\"${searchText}\"` } }
+  if (!isAdmin(req)) {
+    condition = Object.assign(condition, { visible: true })
   }
+  let products: any = await ProductModel.find(condition)
+    .populate('category')
+    .sort({ createdAt: -1 })
+    .select({ __v: 0, description: 0 })
+    .lean()
+  products = products.map((product) => handleImageProduct(product))
+  const response = {
+    message: 'Tìm các sản phẩm thành công',
+    data: products,
+  }
+  return responseSuccess(res, response)
 }
+
 
 const uploadProductImage = async (req: Request, res: Response) => {
   const path = await uploadFile(req, FOLDERS.PRODUCT)
