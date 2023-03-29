@@ -17,6 +17,9 @@ commonProductRouter.get(
   helpersMiddleware.entityValidator,
   wrapAsync(ProductController.getProducts)
 )
+commonProductRouter.get('/search', wrapAsync(ProductController.searchProduct))
+
+commonProductRouter.get('/searchs', wrapAsync(ProductController.searchProducts))
 
 commonProductRouter.get(
   '/:product_id',
@@ -25,13 +28,4 @@ commonProductRouter.get(
   wrapAsync(ProductController.getProduct)
 )
 
-commonProductRouter.get(
-  '/search',
-  wrapAsync(ProductController.searchProduct)
-)
-
-commonProductRouter.get(
-  '/searchs',
-  wrapAsync(ProductController.searchProducts)
-)
 export default commonProductRouter
