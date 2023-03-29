@@ -309,7 +309,7 @@ const deleteManyProducts = async (req: Request, res: Response) => {
 const searchProduct = async (req: Request, res: Response) => {
   const { searchText }: { [key: string]: string | any } = req.query;
   const searchExpression = { $text: { $search: searchText } };
-  const condition = !isAdmin(req) ? Object.assign(searchExpression, { visible: true }) : searchExpression;
+  const condition = searchExpression;
   
   let products: any = await ProductModel.find(condition)
     .populate('category')
