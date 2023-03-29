@@ -306,25 +306,6 @@ const deleteManyProducts = async (req: Request, res: Response) => {
 //   return responseSuccess(res, response)
 // }
 
-// const searchProduct = async (req: Request, res: Response) => {
-//   const { searchText }: { [key: string]: string | any } = req.query;
-//   const searchExpression = { $text: { $search: searchText } };
-//   const condition = searchExpression;
-
-//   let products: any = await ProductModel.find(condition)
-//     .populate('category')
-//     .sort({ createdAt: -1 })
-//     .select('-description -__v')
-//     .lean();
-//   products = products.map((product) => handleImageProduct(product));
-
-//   const response = {
-//     message: 'Tìm các sản phẩm thành công',
-//     data: products,
-//   };
-//   return responseSuccess(res, response);
-// };
-
 const searchProduct = async (req: Request, res: Response) => {
   try {
     const { searchText } = req.query
