@@ -10,7 +10,6 @@ import { FOLDERS, FOLDER_UPLOAD, ROUTE_IMAGE } from '../constants/config'
 import fs from 'fs'
 import { omitBy } from 'lodash'
 import { ORDER, SORT_BY } from '../constants/product'
-import * as unorm from 'unorm'
 
 export const handleImageProduct = (product) => {
   if (product.image !== undefined && product.image !== '') {
@@ -307,53 +306,24 @@ const deleteManyProducts = async (req: Request, res: Response) => {
 //   return responseSuccess(res, response)
 // }
 
-// Define the removeUnicode function as a simple arrow function that takes a string argument and returns the string with all unicode signs removed.
-const removeUnicode = (str: string) => {
-  if (!str) return ''
-  return unorm.nfd(str).replace(/[\u0300-\u036f]/g, '')
-}
-
-// Define the searchProduct function as an async arrow function with two parameters: a request object and a response object.
 const searchProduct = async (req: Request, res: Response) => {
-  // Extract the searchText string from the request query object and cast it to type {searchText: string}.
-  const { searchText } = req.query as { searchText: string }
-
-  // Define a condition object for querying the database that depends on whether the user is an admin or not.
-  const condition = !isAdmin(req)
-    ? {
-        $or: [
-          { name: { $regex: searchText, $options: 'i' } },
-          { name: { $regex: removeUnicode(searchText), $options: 'i' } },
-        ],
-        visible: true,
-      }
-    : {
-        $or: [
-          { name: { $regex: searchText, $options: 'i' } },
-          { name: { $regex: removeUnicode(searchText), $options: 'i' } },
-        ],
-      }
-
-  // Query the database to get all products matching the given condition by calling the find() method on the ProductModel with the condition and projection objects as arguments.
-  let products: any[] = await ProductModel.find(condition, {
-    description: 0,
-    __v: 0,
-  })
+  const { searchText }: { [key: string]: string | any } = req.query;
+  const searchExpression = { $text: { $search: searchText } };
+  const condition = !isAdmin(req) ? Object.assign(searchExpression, { visible: true }) : searchExpression;
+  
+  let products: any = await ProductModel.find(condition)
     .populate('category')
     .sort({ createdAt: -1 })
-    .lean()
-
-  // Use Promise.all() and Array.map() to process each product retrieved from the database by calling handleImageProduct() on them.
-  products = await Promise.all(
-    products.map(async (product) => await handleImageProduct(product))
-  )
-
-  // Send a success response to the client with the retrieved and processed products as well as a success message.
-  return responseSuccess(res, {
+    .select({ __v: 0, description: 0 })
+    .lean();
+  products = products.map((product) => handleImageProduct(product));
+  
+  const response = {
     message: 'Tìm các sản phẩm thành công',
     data: products,
-  })
-}
+  };
+  return responseSuccess(res, response);
+};
 
 const uploadProductImage = async (req: Request, res: Response) => {
   const path = await uploadFile(req, FOLDERS.PRODUCT)

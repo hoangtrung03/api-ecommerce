@@ -18,4 +18,7 @@ const ProductSchema = new Schema(
     timestamps: true,
   }
 )
-export const ProductModel = mongoose.model('products', ProductSchema)
+export const ProductModel = mongoose.model(
+  'products',
+  ProductSchema.index({ '$**': 'text' })
+)
