@@ -314,7 +314,7 @@ const searchProduct = async (req: Request, res: Response) => {
   let products: any = await ProductModel.find(condition)
     .populate('category')
     .sort({ createdAt: -1 })
-    .select({ __v: 0, description: 0 })
+    .select('-description -__v')
     .lean();
   products = products.map((product) => handleImageProduct(product));
   
