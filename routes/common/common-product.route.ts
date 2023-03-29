@@ -26,7 +26,7 @@ commonProductRouter.get(
 )
 
 commonProductRouter.get(
-  '/search',
+  '/search/searchproduct',
   wrapAsync(ProductController.searchProduct)
 )
 export default commonProductRouter
