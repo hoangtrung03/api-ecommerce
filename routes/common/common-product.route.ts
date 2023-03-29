@@ -29,4 +29,9 @@ commonProductRouter.get(
   '/search',
   wrapAsync(ProductController.searchProduct)
 )
+
+commonProductRouter.get(
+  '/searchs',
+  wrapAsync(ProductController.searchProducts)
+)
 export default commonProductRouter

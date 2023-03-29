@@ -27,8 +27,8 @@ export const addToCartRules = () => {
     body('product_id')
       .exists({ checkFalsy: true })
       .withMessage('product_id không được để trống')
-      .isMongoId(),
-      // .withMessage('product_id không đúng định dạng'),
+      .isMongoId()
+      .withMessage('product_id không đúng định dạng'),
     body('buy_count')
       .exists({ checkFalsy: true })
       .withMessage('buy_count không được để trống')
