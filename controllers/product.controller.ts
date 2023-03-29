@@ -306,33 +306,24 @@ const deleteManyProducts = async (req: Request, res: Response) => {
 //   return responseSuccess(res, response)
 // }
 
-const searchProduct = async (req: Request, res: Response) => {
-  const { searchText }: { [key: string]: string | any } = req.query;
-  const searchExpression = { $text: { $search: searchText } };
-  const condition = searchExpression;
-  
-  let products: any = await ProductModel.find(condition)
-    .populate('category')
-    .sort({ createdAt: -1 })
-    .select('-description -__v')
-    .lean();
-  products = products.map((product) => handleImageProduct(product));
-  
-  const response = {
-    message: 'Tìm các sản phẩm thành công',
-    data: products,
-  };
-  return responseSuccess(res, response);
-};
-
-const uploadProductImage = async (req: Request, res: Response) => {
-  const path = await uploadFile(req, FOLDERS.PRODUCT)
-  const response = {
-    message: 'Upload ảnh thành công',
-    data: path,
+const searchProducts = async (req: Request, res: Response) => {
+  try {
+    const { searchText } = req.query;
+    const products = await ProductModel.find({ $text: { $search: searchText } })
+      .populate('category')
+      .select('-description -__v')
+      .sort({ createdAt: -1 })
+      .lean();
+    const response = {
+      message: 'Tìm kiếm sản phẩm thành công',
+      data: products,
+    };
+    return responseSuccess(res, response);
+  } catch (error) {
+    console.error(error);
+    return responseError(res, 500, 'Đã có lỗi xảy ra trong quá trình tìm kiếm');
   }
-  return responseSuccess(res, response)
-}
+};
 
 const uploadManyProductImages = async (req: Request, res: Response) => {
   const paths = await uploadManyFile(req, FOLDERS.PRODUCT)
