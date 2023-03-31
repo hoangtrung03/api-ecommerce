@@ -288,7 +288,7 @@ const deleteManyProducts = async (req: Request, res: Response) => {
 
 const searchProduct = async (req: Request, res: Response) => {
   let { searchText }: { [key: string]: string | any } = req.query
-  searchText = decodeURI(searchText)
+  searchText = decodeURI(searchText).substring(0, 3)
   let condition = { $text: { $search: `\"${searchText}\"` } }
   if (!isAdmin(req)) {
     condition = Object.assign(condition, { visible: true })
@@ -305,7 +305,6 @@ const searchProduct = async (req: Request, res: Response) => {
   }
   return responseSuccess(res, response)
 }
-
 
 const uploadProductImage = async (req: Request, res: Response) => {
   const path = await uploadFile(req, FOLDERS.PRODUCT)
@@ -327,24 +326,24 @@ const uploadManyProductImages = async (req: Request, res: Response) => {
 
 const searchProducts = async (req, res) => {
   try {
-    const { searchText } = req.query;
+    const { searchText } = req.query
 
     const products = await ProductModel.find({
-      $text: { $search: searchText }
-    }).populate('category');
+      $text: { $search: searchText },
+    }).populate('category')
 
     res.status(200).json({
       success: true,
       count: products.length,
-      data: products
-    });
+      data: products,
+    })
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
-    });
+      message: error.message,
+    })
   }
-};
+}
 
 const ProductController = {
   addProduct,
@@ -357,7 +356,7 @@ const ProductController = {
   deleteManyProducts,
   uploadProductImage,
   uploadManyProductImages,
-  searchProducts
+  searchProducts,
 }
 
 export default ProductController
