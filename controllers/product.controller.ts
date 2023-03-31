@@ -288,7 +288,7 @@ const deleteManyProducts = async (req: Request, res: Response) => {
 
 const searchProduct = async (req: Request, res: Response) => {
   let { searchText }: { [key: string]: string | any } = req.query
-  searchText = decodeURI(searchText).substring(0, 3)
+  searchText = decodeURI(searchText)
   let condition = { $text: { $search: `\"${searchText}\"` } }
   if (!isAdmin(req)) {
     condition = Object.assign(condition, { visible: true })
