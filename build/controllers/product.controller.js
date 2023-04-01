@@ -268,6 +268,25 @@ const uploadManyProductImages = async (req, res) => {
     };
     return (0, response_1.responseSuccess)(res, response);
 };
+const searchProducts = async (req, res) => {
+    try {
+        const { searchText } = req.query;
+        const products = await product_model_1.ProductModel.find({
+            $text: { $search: searchText },
+        }).populate('category');
+        res.status(200).json({
+            success: true,
+            count: products.length,
+            data: products,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
 const ProductController = {
     addProduct,
     getAllProducts,
@@ -279,5 +298,6 @@ const ProductController = {
     deleteManyProducts,
     uploadProductImage,
     uploadManyProductImages,
+    searchProducts,
 };
 exports.default = ProductController;

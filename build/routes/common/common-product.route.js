@@ -16,6 +16,7 @@ const commonProductRouter = (0, express_1.Router)();
  * @method get
  */
 commonProductRouter.get('', product_middleware_1.default.getProductsRules(), helpers_middleware_1.default.entityValidator, (0, response_1.wrapAsync)(product_controller_1.default.getProducts));
-commonProductRouter.get('/:product_id', helpers_middleware_1.default.idRule('product_id'), helpers_middleware_1.default.idValidator, (0, response_1.wrapAsync)(product_controller_1.default.getProduct));
 commonProductRouter.get('/search', (0, response_1.wrapAsync)(product_controller_1.default.searchProduct));
+commonProductRouter.get('/searchs', (0, response_1.wrapAsync)(product_controller_1.default.searchProducts));
+commonProductRouter.get('/:product_id', helpers_middleware_1.default.idRule('product_id'), helpers_middleware_1.default.idValidator, (0, response_1.wrapAsync)(product_controller_1.default.getProduct));
 exports.default = commonProductRouter;

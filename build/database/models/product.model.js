@@ -1,4 +1,5 @@
 "use strict";
+// import mongoose, { Schema } from 'mongoose'
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -24,6 +25,28 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductModel = void 0;
+// const ProductSchema = new Schema(
+//   {
+//     name: { type: String, required: true, maxlength: 160 },
+//     image: { type: String, required: true, maxlength: 1000 },
+//     images: [{ type: String, maxlength: 1000 }],
+//     description: { type: String },
+//     category: { type: mongoose.SchemaTypes.ObjectId, ref: 'categories' },
+//     price: { type: Number, default: 0 },
+//     rating: { type: Number, default: 0 },
+//     price_before_discount: { type: Number, default: 0 },
+//     quantity: { type: Number, default: 0 },
+//     sold: { type: Number, default: 0 },
+//     view: { type: Number, default: 0 },
+//   },
+//   {
+//     timestamps: true,
+//   }
+// )
+// export const ProductModel = mongoose.model(
+//   'products',
+//   ProductSchema.index({ '$**': 'text' })
+// )
 const mongoose_1 = __importStar(require("mongoose"));
 const ProductSchema = new mongoose_1.Schema({
     name: { type: String, required: true, maxlength: 160 },
@@ -40,4 +63,5 @@ const ProductSchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
+ProductSchema.index({ name: 'text', description: 'text' });
 exports.ProductModel = mongoose_1.default.model('products', ProductSchema);
