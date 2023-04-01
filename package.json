@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./build/index.js production",
     "node-build": "tsc --project ./",
-    "build": "yarn install && yarn node-build",
+    "build": "npm install && npm run node-build",
     "prod": "tsc --project ./ && node ./build/index.js production"
   },
   "keywords": [],
